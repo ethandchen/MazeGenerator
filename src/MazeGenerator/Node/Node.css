@@ -1,0 +1,53 @@
+:root {
+    --maze-color: rgb(255, 255, 255)
+}
+.node {
+    width: 20px;
+    height: 20px;
+    display: inline-grid;
+    margin-bottom: -5px;
+    background-color: rgb(145, 73, 60);
+    border-top: 1px solid var(--maze-color);
+    border-right: 1px solid var(--maze-color);
+    border-bottom: 1px solid var(--maze-color);
+    border-left: 1px solid var(--maze-color);
+}
+@keyframes visited-bfs {
+    0% {background: rgb(255, 128, 128);}
+    25% {background: rgb(255, 194, 133);}
+    50% {background: rgb(255, 255, 130);}
+    75% {background: rgb(194, 255, 194);}
+    100% {background: rgb(201, 225, 255);}
+}
+.node-visited {
+    background-color: var(--maze-color);
+}
+.node-visited-bfs {
+    animation-name: visited-bfs;
+    animation-duration: 2s;
+    background: rgb(201, 225, 255);
+}
+.node-up-border {
+    border-top: 1px solid rgb(0, 0, 0);
+}
+.node-right-border {
+    border-right: 1px solid rgb(0, 0, 0);
+}
+.node-down-border {
+    border-bottom: 1px solid rgb(0, 0, 0);
+}
+.node-left-border {
+    border-left: 1px solid rgb(0, 0, 0);
+}
+.node-solved {
+    background-color: rgb(22, 255, 22);
+}
+.node-start {
+    background-color: rgb(255, 255, 0)
+}
+.node-end {
+    background-color: rgb(0, 200, 100)
+}
+.node-current {
+    background-color: red;
+}

@@ -1,0 +1,34 @@
+body {
+    background-color: rgb(255, 255, 255)
+}
+.mainTitle {
+    margin: 50px;
+    font-size: 40px;
+}
+.grid {
+    margin: 50px 50px;
+}
+.button {
+    border-radius: 5px;
+    font-size: 30px;
+    height: 80px;
+    padding: 20px;
+}
+.button:hover {
+    background: rgb(251, 251, 251);
+}
+.sliderContainer {
+    width: 300px;
+    height: 50px;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+}
+.speedTitle {
+    font-size: 25px;
+}
+.slider {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
