@@ -1,32 +1,26 @@
 //returns an array of node coordinates in the order they
 //are visited
 //as well as an array of the solution path
-export default function bfs(grid, start, finish) {
+export default function dfs(grid, start, finish) {
     let solution = [];
+    let dfsStack = [];
     let visited = [];
-    let bfsArr = [];
-    bfsArr.push(start);
-    while(bfsArr.length !== 0) {
-        let arr = [];
-        let k = bfsArr.length;
-        for(var i = 0; i < k; i++) {
-            const node = bfsArr.shift();
-            arr.push(node);
-            grid[node.col][node.row].solVisited = true;
-            if(node === finish) {
-                visited.push(arr);
-                solution = getSolution(node);
-                return [visited, solution];
-            }
-            let neighbors = getNeighbors(grid, node);
-            for(var b = 0; b < neighbors.length; b++) {
-                bfsArr.push(neighbors[b]);
-            }
+    
+    dfsStack.push(start);
+    while(dfsStack.length !== 0) {
+        const currNode = dfsStack.pop();
+        visited.push(currNode);
+        grid[currNode.col][currNode.row].solVisited = true;
+        if(currNode === finish) {
+            solution = getSolution(currNode);
+            return [visited, solution];
         }
-        if(arr.length > 0) {
-            visited.push(arr);
+        let neighbors = getNeighbors(grid, currNode);
+        for(const node of neighbors) {
+            dfsStack.push(node);
         }
     }
+
     return [visited, solution];
 }
 function getNeighbors(grid, node) {

@@ -8,12 +8,12 @@ export default class Node extends Component {
         this.state = {};
     }
     render() {
-        const {row,
-            col,
+        const {col,
+            row,
             isStart,
             isEnd,
             visited,
-            bfsVisited,
+            solVisited,
             borderArr,
             current,
             solved,
@@ -26,12 +26,12 @@ export default class Node extends Component {
         if(borderArr[2]) { extraName += ' node-down-border';}
         if(borderArr[3]) { extraName += ' node-left-border';}
         if(visited) { extraName += ' node-visited';}
-        if(bfsVisited) { extraName += ' node-visited-bfs';}
+        if(solVisited) { extraName += ' node-visited-sol';}
         if(current) { extraName += ' node-current';}
         if(solved) { extraName += ' node-solved';}
 
         return <div 
-            id = {`node_${row}_${col}`}
+            id = {`node_${col}_${row}`}
             className={`node ${extraName}`}></div>;
     }
 }
