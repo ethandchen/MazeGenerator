@@ -11,6 +11,17 @@ let GRID_WIDTH = 40;
 let START = [0, 0];
 let END = [GRID_WIDTH-1, GRID_HEIGHT-1];
 
+const genAlgs = {
+    UNSELECTED: "UNSELECTED",
+    DFS: "DFS",
+}
+const solveAlgs = {
+    UNSELECTED: "UNSELECTED",
+    DFS: "DFS",
+    BFS: "BFS",
+}
+let genAlg = genAlgs.UNSELECTED;
+let solveAlg = solveAlgs.UNSELECTED;
 export default class MazeGenerator extends Component {
     constructor(props) {
         super(props);
@@ -36,8 +47,48 @@ export default class MazeGenerator extends Component {
         const {grid, inProgress, generated} = this.state;
         return (
             <div>
+            <link rel="stylesheet"href=
+            "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+            </link>
             <div className = "mainTitle">Maze Generator</div>
             <div className = "navbar">
+                <div className = "dropDown">
+                    <button className = "dropButton">
+                        Generation Algorithms 
+                        <i className = "fa fa-caret-down"></i>
+                    </button>
+                    <div className = "dropDown-content">
+                        <button id = "button-dfs" className = "dropDown-button button" onClick={
+                            () => {
+                                if(!inProgress) {genAlg = genAlgs.DFS;}
+                            }    
+                        }>
+                        DFS
+                        </button>
+                    </div>
+                </div>
+                <div className = "dropDown">
+                    <button className = "dropButton">
+                        Solution Algorithms 
+                        <i className = "fa fa-caret-down"></i>
+                    </button>
+                    <div className = "dropDown-content">
+                        <button id = "button-dfs" className = "dropDown-button button" onClick={
+                            () => {
+                                if(!inProgress) {solveAlg = solveAlgs.DFS;}
+                            }    
+                        }>
+                        DFS
+                        </button>
+                        <button id = "button-dfs" className = "dropDown-button button" onClick={
+                            () => {
+                                if(!inProgress) {solveAlg = solveAlgs.BFS;}
+                            }    
+                        }>
+                        BFS
+                        </button>
+                    </div>
+                </div>
                 <button id = "button-clear" className = "button" onClick={
                     () => {
                         if(!inProgress) {this.resetMaze();}
@@ -60,7 +111,7 @@ export default class MazeGenerator extends Component {
                     Solve Maze!
                 </button>
                 <div className = "sliderContainer">
-                    <div className = "speedTitle">Adjust Speed</div>
+                    <div className = "speedTitle">Adjust Generation Speed</div>
                     <input type = "range"
                         min = "5"
                         max = "50"
@@ -120,7 +171,14 @@ export default class MazeGenerator extends Component {
         this.setState({generated: false});
         document.getElementById("button-solve").disabled = true;
     }
-    async createMaze() {
+    createMaze() {
+        switch(genAlg) {
+            case genAlgs.DFS:
+                this.createMazeDFS();
+                break;
+        }
+    }
+    async createMazeDFS() {
         document.getElementById("button-clear").disabled = true;
         document.getElementById("button-solve").disabled = true;
         this.setState({inProgress: true});
@@ -203,8 +261,14 @@ export default class MazeGenerator extends Component {
         thisNode.className = thisNode.className.replace(' node-current', '');
     }
     async solveMaze() {
-        //this.solveBFS();
-        this.solveDFS();
+        switch(solveAlg) {
+            case solveAlgs.DFS: 
+                this.solveDFS();
+                break;
+            case solveAlgs.BFS:
+                this.solveBFS();
+                break;
+        }
     }
     async solveBFS() {
         await new Promise(
@@ -248,6 +312,12 @@ export default class MazeGenerator extends Component {
         }
     }
     async solveDFS() {
+        await new Promise(
+            resolve => {
+                this.setState({inProgress: true});
+                resolve(true);
+            }
+        );
         const {grid} = this.state;
         let arr = dfs(grid, grid[0][0], grid[grid.length-1][grid[0].length-1]);
         let arr1 = arr[0];
@@ -276,6 +346,7 @@ export default class MazeGenerator extends Component {
                 }
             );
         }
+        this.setState({inProgress: false});
     }
 }
 let node = (col, row) => {

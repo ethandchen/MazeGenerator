@@ -1,35 +1,72 @@
+:root {
+    --header-color: rgb(15, 43, 80);
+    --button-color: rgb(85, 122, 177);
+}
 body {
-    background-color: rgb(255, 255, 255);
-    overflow-x: scroll;
+    background-color: rgb(231, 231, 231);
 }
 .navbar {
     position: relative;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    height: 100px;
-    background-color: rgb(100, 139, 189);
+    grid-template-columns: repeat(6, 1fr);
+    height: 60px;
+    background-color: var(--header-color);
+    background-image:linear-gradient(var(--header-color),rgb(33, 64, 105));
 }
 .mainTitle {
-    margin: 30px;
+    color: rgb(255, 255, 255);
+    padding: 10px;
     font-size: 40px;
+    background-image:linear-gradient(rgb(33, 64, 105), var(--header-color));
+    background-color: var(--header-color);
 }
 .grid {
-    margin: 50px 50px;
-    padding: 20px;
+    margin: 0px 0px;
+    padding: 0px;
     display: grid;
     grid-template-rows: repeat(20, 1fr);
     grid-template-columns: repeat(40, 1fr);
 }
 .button {
-    font-size: 30px;
+    font-size: 20px;
     color: rgb(255, 255, 255);
-    background: transparent;
+    background-color: var(--button-color);
     height: 100%;
     border: transparent;
-    padding: 20px 50px;
+    border-radius: 20px;
+    margin: 0px 1px;
 }
 .button:hover {
-    background: rgb(61, 104, 168);
+    background-image:linear-gradient(rgb(34, 64, 110), rgb(138, 175, 231));
+}
+.dropDown {
+    float: left;
+}
+.dropButton {
+    font-size: 20px;
+    color: rgb(255, 255, 255);
+    background-color: var(--button-color);
+    height: 100%;
+    border: transparent;
+    margin: 0px 1px;
+}
+.dropButton i {
+    float: right;
+}
+.dropDown-content{
+    display: none;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+}
+.dropDown-button{
+    display: block;
+    width: 15%;
+    border-radius: 0px;
+}
+.dropDown:hover .dropDown-content{
+    display: block;
 }
 .sliderContainer {
     width: 300px;
@@ -38,13 +75,14 @@ body {
 }
 .speedTitle {
     color: rgb(255, 255, 255);
-    font-size: 25px;
-    padding: 20px;
+    font-size: 20px;
+    /* padding: 20px; */
     position: relative;
 }
 .slider {
     color: rgb(255, 255, 255);
-    width: 100%;
+    background-color: var(--button-color);
+    width: 90%;
     height: 20%;
     position: relative;
 }

@@ -1,16 +1,16 @@
 :root {
-    --maze-color: rgb(255, 255, 255)
+    --maze-color: rgb(255, 255, 255);
 }
 .node {
     width: 100%;
     height: 0px;
-    padding-bottom: 100%;
+    padding-top: 100%;
     margin-bottom: -5px;
-    background-color: rgb(145, 73, 60);
-    border-top: 1px solid var(--maze-color);
-    border-right: 1px solid var(--maze-color);
-    border-bottom: 1px solid var(--maze-color);
-    border-left: 1px solid var(--maze-color);
+    background-color: rgb(131, 131, 131);
+    border-top: 2px solid var(--maze-color);
+    border-right: 2px solid var(--maze-color);
+    border-bottom: 2px solid var(--maze-color);
+    border-left: 2px solid var(--maze-color);
     overflow-x: hidden;
 }
 @keyframes visited-sol {
@@ -29,16 +29,16 @@
     background: rgb(201, 225, 255);
 }
 .node-up-border {
-    border-top: 1px solid rgb(0, 0, 0);
+    border-top: 2px solid rgb(0, 0, 0);
 }
 .node-right-border {
-    border-right: 1px solid rgb(0, 0, 0);
+    border-right: 2px solid rgb(0, 0, 0);
 }
 .node-down-border {
-    border-bottom: 1px solid rgb(0, 0, 0);
+    border-bottom: 2px solid rgb(0, 0, 0);
 }
 .node-left-border {
-    border-left: 1px solid rgb(0, 0, 0);
+    border-left: 2px solid rgb(0, 0, 0);
 }
 .node-solved {
     background-color: rgb(22, 255, 22);
