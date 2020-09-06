@@ -2,26 +2,27 @@ import React,  {Component} from 'react';
 import Node from './Node/Node';
 
 import './MazeGenerator.css';
+import prims from './GenerationAlgs/prims.js';
 import './SolutionAlgs/bfs.js';
 import bfs from './SolutionAlgs/bfs.js';
 import dfs from './SolutionAlgs/dfs.js';
 
 let GRID_HEIGHT = 20
-let GRID_WIDTH = 40;
+let GRID_WIDTH = 50;
 let START = [0, 0];
 let END = [GRID_WIDTH-1, GRID_HEIGHT-1];
 
 const genAlgs = {
     UNSELECTED: "UNSELECTED",
-    DFS: "DFS",
+    RBT: "Recursive Backtracking",
+    PRIMS: "Prims Algorithm",
 }
 const solveAlgs = {
     UNSELECTED: "UNSELECTED",
-    DFS: "DFS",
-    BFS: "BFS",
+    RBT: "Recursive Backtracking",
+    BFS: "Breadth First Search",
 }
-let genAlg = genAlgs.UNSELECTED;
-let solveAlg = solveAlgs.UNSELECTED;
+let prompt = "";
 export default class MazeGenerator extends Component {
     constructor(props) {
         super(props);
@@ -31,6 +32,8 @@ export default class MazeGenerator extends Component {
             inProgress: false,     //whether the maze generation is in progress
             generated: false,       //whether the maze has been generated
                                     //and is ready for solving
+            genAlg: genAlgs.UNSELECTED,
+            solveAlg: solveAlgs.UNSELECTED,
             speed: 10,
         };
     }
@@ -44,13 +47,31 @@ export default class MazeGenerator extends Component {
         }
     }
     render() {
-        const {grid, inProgress, generated} = this.state;
+        const {grid, inProgress, generated, genAlg, solveAlg} = this.state;
+        if(generated) {
+            if(solveAlg === solveAlgs.UNSELECTED) {
+                prompt = "Select a Solution Algorithm";
+            }else {
+                prompt = solveAlg;
+            }
+        }else {
+            if(genAlg === genAlgs.UNSELECTED) {
+                prompt = "Select a Generation Algorithm";
+            }else {
+                prompt = genAlg;
+            }
+        }
         return (
             <div>
             <link rel="stylesheet"href=
             "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
             </link>
-            <div className = "mainTitle">Maze Generator</div>
+            <div className = "mainTitle">
+                <div className = "prompt">
+                    {prompt}
+                </div>
+                Maze Generator
+            </div>
             <div className = "navbar">
                 <div className = "dropDown">
                     <button className = "dropButton">
@@ -58,12 +79,19 @@ export default class MazeGenerator extends Component {
                         <i className = "fa fa-caret-down"></i>
                     </button>
                     <div className = "dropDown-content">
-                        <button id = "button-dfs" className = "dropDown-button button" onClick={
+                        <button id = "button-rbt" className = "dropDown-button button" onClick={
                             () => {
-                                if(!inProgress) {genAlg = genAlgs.DFS;}
+                                if(!inProgress) {this.setState({genAlg: genAlgs.RBT})}
                             }    
                         }>
-                        DFS
+                        {genAlgs.RBT}
+                        </button>
+                        <button id = "button-prims" className = "dropDown-button button" onClick={
+                            () => {
+                                if(!inProgress) {this.setState({genAlg: genAlgs.PRIMS})}
+                            }    
+                        }>
+                        {genAlgs.PRIMS}
                         </button>
                     </div>
                 </div>
@@ -73,19 +101,19 @@ export default class MazeGenerator extends Component {
                         <i className = "fa fa-caret-down"></i>
                     </button>
                     <div className = "dropDown-content">
-                        <button id = "button-dfs" className = "dropDown-button button" onClick={
+                        <button id = "button-rbt" className = "dropDown-button button" onClick={
                             () => {
-                                if(!inProgress) {solveAlg = solveAlgs.DFS;}
+                                if(!inProgress) {this.setState({solveAlg: solveAlgs.RBT})}
                             }    
                         }>
-                        DFS
+                        {solveAlgs.RBT}
                         </button>
-                        <button id = "button-dfs" className = "dropDown-button button" onClick={
+                        <button id = "button-bfs" className = "dropDown-button button" onClick={
                             () => {
-                                if(!inProgress) {solveAlg = solveAlgs.BFS;}
+                                if(!inProgress) {this.setState({solveAlg: solveAlgs.BFS})}
                             }    
                         }>
-                        BFS
+                        {solveAlgs.BFS}
                         </button>
                     </div>
                 </div>
@@ -98,7 +126,7 @@ export default class MazeGenerator extends Component {
                 </button>
                 <button id = "button-generate" className = "button" onClick={
                     () => {
-                        if(!inProgress) {this.createMaze(0, 0)}
+                        if(!inProgress && !generated) {this.createMaze(0, 0)}
                     }    
                 }>
                     Generate Maze!
@@ -169,30 +197,31 @@ export default class MazeGenerator extends Component {
         this.setState({grid});
         this.setState({inProgress: false});
         this.setState({generated: false});
-        document.getElementById("button-solve").disabled = true;
+        this.setState({genAlg: genAlgs.UNSELECTED});
+        this.setState({solveAlg: solveAlgs.UNSELECTED});
     }
     createMaze() {
+        const {genAlg} = this.state;
         switch(genAlg) {
-            case genAlgs.DFS:
+            case genAlgs.RBT:
                 this.createMazeDFS();
+                break;
+            case genAlgs.PRIMS:
+                this.createMazePrims(0, 0);
                 break;
         }
     }
     async createMazeDFS() {
-        document.getElementById("button-clear").disabled = true;
-        document.getElementById("button-solve").disabled = true;
         this.setState({inProgress: true});
         this.setState({generated: false});
         await new Promise((resolve) => {
-            resolve(this.createMazeHelper(0, 0, 0, 0));
+            resolve(this.createMazeDFSHelper(GRID_WIDTH/2, GRID_HEIGHT/2, GRID_WIDTH/2, GRID_HEIGHT/2));
         });
         this.setState({inProgress: false});
         this.setState({generated: true});
-        document.getElementById("button-clear").disabled = false;
-        document.getElementById("button-solve").disabled = false;
     }
     //recursive function to help create maze;
-    async createMazeHelper(c, r, prevC, prevR) {
+    async createMazeDFSHelper(c, r, prevC, prevR) {
         //check for base cases
         if(r < 0 || r >= GRID_HEIGHT || c < 0 || c >= GRID_WIDTH) {
             return;
@@ -250,7 +279,7 @@ export default class MazeGenerator extends Component {
                 setTimeout(() => {
                     //set node to not current node
                     thisNode.className = thisNode.className.replace(' node-current', '');
-                    resolve(this.createMazeHelper(cc, rr, c, r))
+                    resolve(this.createMazeDFSHelper(cc, rr, c, r))
                 }, 10000/((this.state.speed)*(this.state.speed)))
             });
             dirs.splice(num, 1);    //remove element
@@ -260,9 +289,62 @@ export default class MazeGenerator extends Component {
         //set to not current node
         thisNode.className = thisNode.className.replace(' node-current', '');
     }
+    async createMazePrims(rStart, cStart) {
+        this.setState({inProgress: true});
+        this.setState({generated: false});
+        const{grid} = this.state;
+        let startNode = document.getElementById(`node_${cStart}_${rStart}`);
+        startNode.className += ' node-visited';
+        //set boundaries of node
+        let dirs = [[0, -1], [1, 0], [0, 1], [-1, 0]];
+        let borderNames = [' node-up-border', 
+                        ' node-right-border', 
+                        ' node-down-border',
+                        ' node-left-border']
+        for(var i = 0; i < 4; i++) {
+            grid[cStart][rStart].borderArr[i] = true;
+            startNode.className += borderNames[i];
+        }
+
+        let edges = prims(grid, grid[cStart][rStart]);
+        for(const edge of edges) {
+            await new Promise((resolve) => {
+                setTimeout(() => {
+                    let r = edge[1].row;
+                    let c = edge[1].col;
+                    let prevR = edge[0].row;
+                    let prevC = edge[0].col;
+                    let thisNode = document.getElementById(`node_${c}_${r}`);
+                    thisNode.className += ' node-visited';
+                    grid[c][r].visited = true;
+                    //alert(prevR + " " + prevC + "\n" + r + " " + c);
+                    for(var i = 0; i < 4; i++) {
+                        let dir = dirs[i];
+                        let rr = r + dir[1];
+                        let cc = c + dir[0];
+                        if(rr !== prevR || cc !== prevC) {
+                            //set boundary
+                            grid[c][r].borderArr[i] = true;
+                            thisNode.className += borderNames[i];
+                        }else {
+                            //erase boundary from previous node
+                            grid[prevC][prevR].borderArr[(i + 2)%4] = false;
+                            let previous = document.getElementById(`node_${prevC}_${prevR}`);
+                            previous.className = previous.className.replace(borderNames[(i + 2)%4], '');
+                        }
+                    }
+                    resolve(true);
+                }, 10000/((this.state.speed)*(this.state.speed)))
+            });
+            
+        }
+        this.setState({inProgress: false});
+        this.setState({generated: true});;
+    }
     async solveMaze() {
+        const {solveAlg} = this.state;
         switch(solveAlg) {
-            case solveAlgs.DFS: 
+            case solveAlgs.RBT: 
                 this.solveDFS();
                 break;
             case solveAlgs.BFS:
@@ -271,6 +353,7 @@ export default class MazeGenerator extends Component {
         }
     }
     async solveBFS() {
+        //alert("HII");
         await new Promise(
             resolve => {
                 this.setState({inProgress: true});
